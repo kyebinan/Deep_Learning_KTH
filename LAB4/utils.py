@@ -5,6 +5,7 @@ class LittleHopfieldNetwork:
     def __init__(self, num_neurons):
         self.num_neurons = num_neurons
         self.weights = np.zeros((num_neurons, num_neurons))
+        self.energy_iteration = []
 
     def train(self, patterns):
         """
@@ -89,10 +90,13 @@ class LittleHopfieldNetwork:
         - The function returns the recalled state after the recall process.        
         """
         recalled_state = initial_state.copy()
+        self.energy_iteration = []
 
         if update_type == 'synchronous':
             for _ in range(max_iterations):
                 new_state = self.synchronous_update(recalled_state)
+                e = self.compute_energy(new_state)
+                self.energy_iteration.append(e)
                 if np.array_equal(new_state, recalled_state):
                     break
                 recalled_state = new_state
@@ -102,11 +106,37 @@ class LittleHopfieldNetwork:
                 for i in range(self.num_neurons):
                     new_state_i = self.asynchronous_update(recalled_state.copy())[i]
                     recalled_state[i] = new_state_i
-
+                e = self.compute_energy(recalled_state)
+                self.energy_iteration.append(e)
                 if np.array_equal(new_state_i, recalled_state[i]):
                     break
 
         return recalled_state
+    
+    def compute_energy(self, state):
+        """
+        Compute the energy of a Hopfield network.
+
+        Parameters:
+        - state (numpy.ndarray): The current state (x_i) of the Hopfield network.
+
+        Returns:
+        - float: The computed energy for the given state and weights.
+        """
+        energy = -np.sum(self.weights * np.outer(state, state))
+        return energy
+    
+    def get_energy_iteration(self):
+        """
+        give the energy's array generated while recall's iteration.
+
+        Parameters:
+        - None
+
+        Returns:
+        - numpy.ndarray: energy for each step.
+        """
+        return np.array(self.energy_iteration)
     
 
 if __name__ == "__main__":
