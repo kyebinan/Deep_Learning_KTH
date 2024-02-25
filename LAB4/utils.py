@@ -111,5 +111,5 @@ class LittleHopfieldNetwork:
 
 if __name__ == "__main__":
     print("================================================")
-    print("|This is the utils module for the notebook 3.  |")
+    print("|This is the utils module for the notebook 4.  |")
     print("================================================")
