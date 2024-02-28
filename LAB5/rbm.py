@@ -118,13 +118,15 @@ class RestrictedBoltzmannMachine():
 
         # [TODO TASK 4.1] get the gradients from the arguments (replace the 0s below) and update the weight and bias parameters
         
-        self.delta_bias_v += 0
-        self.delta_weight_vh += 0
-        self.delta_bias_h += 0
-        
-        self.bias_v += self.delta_bias_v
-        self.weight_vh += self.delta_weight_vh
-        self.bias_h += self.delta_bias_h
+        # Compute gradients
+        self.delta_bias_v = np.mean(v_0 - v_k, axis=0)
+        self.delta_weight_vh = np.dot(h_0.T, v_0) - np.dot(h_k.T, v_k)
+        self.delta_bias_h = np.mean(h_0 - h_k, axis=0)
+
+        # Update parameters
+        self.bias_v += self.learning_rate * self.delta_bias_v
+        self.weight_vh += self.learning_rate * self.delta_weight_vh
+        self.bias_h += self.learning_rate * self.delta_bias_h
         
         return
 
@@ -144,10 +146,14 @@ class RestrictedBoltzmannMachine():
         assert self.weight_vh is not None
 
         n_samples = visible_minibatch.shape[0]
+        # p_hv = np.zeros((n_samples,self.ndim_hidden))
+        # h = np.zeros((n_samples,self.ndim_hidden))
 
         # [TODO TASK 4.1] compute probabilities and activations (samples from probabilities) of hidden layer (replace the zeros below) 
-        
-        return np.zeros((n_samples,self.ndim_hidden)), np.zeros((n_samples,self.ndim_hidden))
+        p_hv = 1 / (1 + np.exp(-self.bias_h - np.dot(visible_minibatch, self.weight_vh)))
+        h = np.random.binomial(1, p_hv)
+
+        return p_hv, h
 
 
     def get_v_given_h(self,hidden_minibatch):
@@ -178,16 +184,31 @@ class RestrictedBoltzmannMachine():
 
             # [TODO TASK 4.1] compute probabilities and activations (samples from probabilities) of visible layer (replace the pass below). \
             # Note that this section can also be postponed until TASK 4.2, since in this task, stand-alone RBMs do not contain labels in visible layer.
+            # Split into two parts
+            total_input = self.bias_v + np.dot(hidden_minibatch, self.weight_vh.T)
+            data_input = total_input[:, :-self.n_labels]
+            label_input = total_input[:, -self.n_labels:]
             
-            pass
+            # Apply activation functions to each part
+            p_data = 1 / (1 + np.exp(-data_input))
+            p_labels = softmax(label_input, axis=1)  # You might need to implement softmax function
+            
+            # Sample activities
+            v_data = np.random.binomial(1, p_data)
+            v_labels = np.argmax(np.random.multinomial(1, p_labels), axis=1)
+            
+            # Concatenate back into a normal visible layer
+            v = np.concatenate((v_data, v_labels[:, np.newaxis]), axis=1)
+            p_vh = np.concatenate((p_data, p_labels), axis=1)
+            
             
         else:
                         
             # [TODO TASK 4.1] compute probabilities and activations (samples from probabilities) of visible layer (replace the pass and zeros below)             
-
-            pass
-        
-        return np.zeros((n_samples,self.ndim_visible)), np.zeros((n_samples,self.ndim_visible))
+            p_vh = 1 / (1 + np.exp(-self.bias_v - np.dot(hidden_minibatch, self.weight_vh.T)))
+            v = np.random.binomial(1, p_vh)
+                
+        return p_vh, v
 
 
     
