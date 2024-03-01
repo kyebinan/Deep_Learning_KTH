@@ -1,4 +1,4 @@
-# DD2437
+# Deep Learning
 My Artificial Neural Network laboratories from my KTH's course
 
 # I-Multi-layer perceptrons: learning and generalization
