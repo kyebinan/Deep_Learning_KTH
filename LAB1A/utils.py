@@ -36,6 +36,16 @@ def make_prediction(weights, bias, features):
 
 
 def visualize_loss_function(errors, title):
+    """
+    Visualize the error over epochs for a training process.
+
+    Parameters:
+    - errors (list): List of error values at each epoch.
+    - title (str): Title for the plot.
+
+    Returns:
+    - None: Displays a line plot of the error over epochs.
+    """
     plt.figure(figsize=(8, 6))
     plt.plot([k for k in range(1, len(errors)+1)], errors)
     plt.xlabel('Epochs')
@@ -43,3 +53,11 @@ def visualize_loss_function(errors, title):
     plt.title(title)
     plt.grid(True)
     plt.show()
+
+
+def main():
+    print("utils module")
+
+
+if __name__ == '__main__':
+    main()

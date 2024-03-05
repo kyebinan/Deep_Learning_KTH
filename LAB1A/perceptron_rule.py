@@ -57,7 +57,7 @@ def perceptron_learning(X, y, epochs = 20, learning_rate = 0.001):
 
 
 def main():
-    print("Perceptron learning rule")
+    print("Perceptron rule module")
 
 
 if __name__ == '__main__':
