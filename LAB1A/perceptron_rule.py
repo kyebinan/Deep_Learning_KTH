@@ -1,20 +1,5 @@
 import numpy as np 
-
-
-def make_prediction(weights, bias, features):
-    """
-    Make a binary prediction using a linear classifier.
-
-    Parameters:
-    - weights (numpy.ndarray): Coefficients for each feature in the linear model.
-    - bias (float): Bias term in the linear model.
-    - features (numpy.ndarray): Input features for making predictions.
-
-    Returns:
-    - int: Binary prediction (1 or -1) based on the linear model.
-    """
-    y = np.dot(features, weights) + bias
-    return 1 if y >= 0 else -1 
+from utils import make_prediction, loss_function
 
 
 def perceptron_learning_step(weights, bias, features, label, learning_rate = 0.001):
@@ -43,7 +28,7 @@ def perceptron_learning_step(weights, bias, features, label, learning_rate = 0.0
 
 def perceptron_learning(X, y, epochs = 20, learning_rate = 0.001):
     """
-    Train a perceptron model using the perceptron learning algorithm.
+    Train a perceptron model using the perceptron learning online algorithm.
 
     Parameters:
     - X (numpy.ndarray): Input features of shape (m, n), where m is the number of samples and n is the number of features.
@@ -60,13 +45,15 @@ def perceptron_learning(X, y, epochs = 20, learning_rate = 0.001):
     bias = 0.0
     W = []
     B = []
+    errors = []
     for _ in range(epochs):
         for i in range(X.shape[0]):
             weights, bias = perceptron_learning_step(weights, bias, X[i], y[i], learning_rate)
             W.append(weights)
             B.append(bias)
+        errors.append(loss_function(X, y, weights, bias))
 
-    return W, B
+    return W, B, errors
 
 
 def main():
