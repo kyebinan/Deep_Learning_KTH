@@ -7,9 +7,8 @@
 
 
 
-
 def main():
-    print("utils module")
+    print("ml_perceptron module")
 
 
 if __name__ == '__main__':
