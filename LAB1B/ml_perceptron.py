@@ -1,16 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt 
+from matplotlib.colors import ListedColormap
 
 TASK1="Classification"
-TASK2="Regression"
+TASK2="Encoder"
+TASK3="Regression"
 class MultiLayersPerceptron():
     """
     """
-    def __init__(self, input_dim, hidden_dim, task=TASK1):
+    def __init__(self, input_dim, hidden_dim, output_dim, task=TASK1):
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
         self.weights_input_to_hidden = np.random.randn(input_dim, hidden_dim)
-        self.weights_hidden_to_output = np.random.randn(hidden_dim, 1)
+        self.weights_hidden_to_output = np.random.randn(hidden_dim, output_dim)
         self.bias_hidden = np.random.randn(hidden_dim)
-        self.bias_output = np.random.randn(1)
+        self.bias_output = np.random.randn(output_dim)
         self.task = task
 
 
@@ -34,7 +39,7 @@ class MultiLayersPerceptron():
 
     def backward_pass(self, y, O, H):
         # Backpropagation on the output layers
-        y = y.reshape((y.shape[0],1))
+        y = y.reshape((y.shape[0],self.output_dim))
         error = y - O
         delta_output = error * self.phi_derivate(O)
         # Backpropagation on the hidden layers
@@ -71,16 +76,31 @@ class MultiLayersPerceptron():
             errors.append(error)
         #self.plot_loss(errors)
         self.plot_decision_boundary(X, y)
+
+
+    def autoencode(self, patterns, epochs=100, lr = 0.001):
+        for _ in range(epochs): 
+            # Forward pass
+            O, H = self.forward_pass(patterns)
+            # Backward pass
+            delta_output, delta_hidden = self.backward_pass(patterns, O, H)
+            # Updating weights
+            self.wieghts_update(patterns, H, delta_output, delta_hidden, lr=lr)
+        self.plot_patterns(patterns, self.make_prediction(patterns))
+
         
 
     def make_prediction(self, X, threshold=0.5):
         y_pred, _ = self.forward_pass(X)
         if self.task == TASK1:
             y_pred = (y_pred >= threshold).astype(int)
-        elif self.task == TASK2:
+        elif self.task == TASK2 :
+            y_pred = (y_pred >= threshold).astype(int)
+            y_pred[y_pred == 0] = -1
+        elif self.task == TASK3:
             pass
         else:
-            raise ValueError(f"Task must be {TASK1} or {TASK2}")
+            raise ValueError(f"Task must be {TASK1}, {TASK2} or {TASK3}")
         return y_pred
 
     def plot_decision_boundary(self, X, y):
@@ -103,6 +123,25 @@ class MultiLayersPerceptron():
         plt.xlabel('Feature 1')
         plt.ylabel('Feature 2')
         plt.title('Decision Boundary')
+
+    def plot_patterns(self, patterns, predictions):
+        cmap = ListedColormap(['black', 'green'])
+        plt.figure(figsize=(8, 6))
+        for i, pattern in enumerate(patterns):
+            plt.subplot(1, 8, i+1)
+            plt.imshow(pattern.reshape((2,4)), cmap=cmap)
+            plt.title(f'input{i+1}')
+            plt.axis('off')
+        plt.show()
+
+        plt.figure(figsize=(8, 6))
+        for i, pattern in enumerate(predictions):
+            plt.subplot(1, 8, i+1)
+            plt.imshow(pattern.reshape((2,4)), cmap=cmap)
+            plt.title(f'output{i+1}')
+            plt.axis('off')
+        plt.show()
+
     
     def plot_loss(self, errors, tilte='Training Loss'):
         plt.figure(figsize=(8, 6))
