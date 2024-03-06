@@ -49,7 +49,7 @@ def shuffle_data(classA, classB):
     nB = classB.shape[0]
 
     data = np.vstack((classA, classB))
-    labels = np.hstack((np.ones(nA), -1 * np.ones(nB))) # Class A labeled as 1, Class B as -1
+    labels = np.hstack((np.ones(nA), 0 * np.ones(nB))) # Class A labeled as 1, Class B as -1
     indices = np.random.permutation(data.shape[0])
     shuffled_data = data[indices,:]
     shuffled_labels = labels[indices]
