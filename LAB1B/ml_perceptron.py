@@ -40,6 +40,7 @@ class MultiLayersPerceptron():
     def backward_pass(self, y, O, H):
         # Backpropagation on the output layers
         y = y.reshape((y.shape[0],self.output_dim))
+        #O = O.reshape((O.shape[0],self.output_dim))
         error = y - O
         delta_output = error * self.phi_derivate(O)
         # Backpropagation on the hidden layers
@@ -50,9 +51,9 @@ class MultiLayersPerceptron():
 
     def wieghts_update(self, X, H, delta_output, delta_hidden, lr=0.001):
         self.weights_hidden_to_output += H.T.dot(delta_output) * lr
-        self.bias_hidden += np.sum(delta_output, axis=0) * lr
-        self.weights_input_to_hidden += X.T.dot(delta_hidden) * lr
         self.bias_output += np.sum(delta_output, axis=0) * lr
+        self.weights_input_to_hidden += X.T.dot(delta_hidden) * lr
+        self.bias_hidden += np.sum(delta_hidden, axis=0) * lr
 
 
     def train(self, X, y, epochs=100, lr = 0.001, batch_size=10):
