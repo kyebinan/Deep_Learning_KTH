@@ -69,6 +69,7 @@ class MultiLayersPerceptron():
         Returns:
         - float: Mean squared loss.
         """
+        y = y.reshape((y.shape[0],self.output_dim))
         return ((y - y_pred) ** 2).mean()
 
     
@@ -179,7 +180,7 @@ class MultiLayersPerceptron():
             y_pred, _ = self.forward_pass(X)
             error = self.loss_function(y, y_pred)
             errors.append(error)
-        #self.plot_loss(errors)
+        self.plot_loss(errors)
         self.plot_decision_boundary(X, y)
 
 
