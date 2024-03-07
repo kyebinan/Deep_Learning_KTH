@@ -181,7 +181,8 @@ class MultiLayersPerceptron():
             error = self.loss_function(y, y_pred)
             errors.append(error)
         self.plot_loss(errors)
-        self.plot_decision_boundary(X, y)
+        if self.task == TASK1:
+            self.plot_decision_boundary(X, y)
 
 
     def autoencode(self, patterns, epochs=100, lr = 0.001):
