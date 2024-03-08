@@ -1,8 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt 
 
-
-
 class RBFNetwork():
     """
     """
@@ -29,7 +27,6 @@ class RBFNetwork():
 
         # Compute RBF activations using the Gaussian RBF formula
         activations = np.exp(-distances / (2 * self.variance**2))
-        print(activations.shape)
         return activations
     
     def batch_least_squares(self, X, y):
@@ -42,12 +39,55 @@ class RBFNetwork():
         """
         # Compute the optimal parameters using the normal equations
         phiX = self.phi(X)
-        i = np.linalg.inv(phiX.T @ phiX) @ phiX.T
         self.weights = np.linalg.inv(phiX.T @ phiX) @ phiX.T @ y
         
 
     def make_prediction(self, X):
-        pass
+        """
+        Make predictions using the trained model.
+
+        Parameters:
+        - X: Input data matrix (numpy array, shape: [n_samples, n_features])
+
+        Returns:
+        - predictions: Predicted outputs (numpy array, shape: [n_samples])
+        """
+        phiX = self.phi(X)
+        predictions = phiX @ self.weights
+        return predictions
+    
+    def plot_prediction(self, X, y, y_pred, title):
+        """
+        Plot the true function, predicted function, and weights for the given approximation.
+
+        Parameters:
+        - X: Input data matrix (numpy array, shape: [n_samples, n_features])
+        - y: True function values (numpy array, shape: [n_samples])
+        - y_pred: Predicted function values (numpy array, shape: [n_samples])
+        - title: Title for the plot (string)
+
+        Returns:
+        - None
+
+        Description:
+        This function generates a visual comparison between the true function, predicted function, 
+        and weights for a given approximation. It plots two subplots: 
+        1. The left subplot displays the true function and the predicted function.
+        2. The right subplot displays the weights associated with the approximation centers.
+        """
+        plt.figure(figsize=(10, 3))
+
+        plt.subplot(1, 2, 1)
+        plt.plot(X, y, label='True Function')
+        plt.plot(X, y_pred, label='Predicted Function',)
+        plt.title(f'{title} Approximation')
+        plt.legend()
+
+        plt.subplot(1, 2, 2)
+        plt.plot(self.centers, self.weights, marker='o')
+        plt.title(f'Weights for {title} Approximation')
+
+        plt.show()
 
 
 

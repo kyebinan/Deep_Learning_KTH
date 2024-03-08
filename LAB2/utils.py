@@ -5,13 +5,6 @@
 
 
 
-
-
-
-
-
-
-
 def main():
     print("utils module")
 
