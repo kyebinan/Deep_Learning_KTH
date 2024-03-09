@@ -29,6 +29,40 @@ class RBFNetwork():
         activations = np.exp(-distances / (2 * self.variance**2))
         return activations
     
+    def delta_rule(self, X, y, epochs=100, lr=0.001):
+        """
+        Train the perceptron using the Delta Rule.
+
+        Parameters:
+        - X (numpy.ndarray): Input data.
+        - y (numpy.ndarray): Target values.
+        - epochs (int, optional): Number of training epochs. Default is 100.
+        - lr (float, optional): Learning rate. Default is 0.001.
+
+        Returns:
+        None
+
+        Note:
+        This function updates the weights of the perceptron using the Delta Rule and
+        plots the training loss over epochs.
+        """
+        phi = self.phi(X)
+        errors = []
+        for _ in range(epochs):
+            for i in range(X.shape[0]):
+                delta = lr * (y[i] - np.dot(phi[i], self.weights)) * phi[i]
+                self.weights = self.weights + delta[:, np.newaxis]
+
+            y_pred = self.make_prediction(X)
+            err = self.absolute_residual_error(y, y_pred)
+            errors.append(err)
+            
+        plt.figure(figsize=(8, 6))
+        plt.plot([k for k in range(1, epochs+1)], errors)
+        plt.title(f'Training loss')
+        plt.show()
+        print(phi[i].shape)
+    
     def batch_least_squares(self, X, y):
         """
         Solve linear regression using the normal equations.
