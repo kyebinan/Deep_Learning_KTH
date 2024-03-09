@@ -1,5 +1,6 @@
 import numpy as np
-import random
+import matplotlib.pyplot as plt
+
 
 class LittleHopfieldNetwork:
     def __init__(self, num_neurons):
@@ -137,11 +138,3 @@ class LittleHopfieldNetwork:
         - numpy.ndarray: energy for each step.
         """
         return np.array(self.energy_iteration)
-    
-
-def main():
-    print("utils module")
-
-
-if __name__ == '__main__':
-    main()
