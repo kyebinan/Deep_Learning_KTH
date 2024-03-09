@@ -89,6 +89,20 @@ class RBFNetwork():
 
         plt.show()
 
+    
+    def absolute_residual_error(self, y, y_pred):
+        """
+        Calculate the mean absolute residual error between true values (y) and predicted values (y_pred).
+
+        Parameters:
+        - y (numpy.ndarray): True values.
+        - y_pred (numpy.ndarray): Predicted values.
+
+        Returns:
+        float: Mean absolute residual error.
+        """
+        return np.mean(np.abs(y - y_pred))
+
 
 
 
