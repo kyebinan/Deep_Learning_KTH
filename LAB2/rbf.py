@@ -29,7 +29,7 @@ class RBFNetwork():
         activations = np.exp(-distances / (2 * self.variance**2))
         return activations
     
-    def delta_rule(self, X, y, epochs=100, lr=0.001):
+    def delta_rule(self, X, y, epochs=100, lr=0.001, plot=False):
         """
         Train the perceptron using the Delta Rule.
 
@@ -56,12 +56,12 @@ class RBFNetwork():
             y_pred = self.make_prediction(X)
             err = self.absolute_residual_error(y, y_pred)
             errors.append(err)
-            
-        plt.figure(figsize=(8, 6))
-        plt.plot([k for k in range(1, epochs+1)], errors)
-        plt.title(f'Training loss')
-        plt.show()
-        print(phi[i].shape)
+        
+        if (plot):
+            plt.figure(figsize=(8, 6))
+            plt.plot([k for k in range(1, epochs+1)], errors)
+            plt.title(f'Training loss')
+            plt.show()
     
     def batch_least_squares(self, X, y):
         """
