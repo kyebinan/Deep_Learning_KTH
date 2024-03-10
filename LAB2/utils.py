@@ -1,5 +1,47 @@
-import numpy as np 
+import numpy as np
+import zipfile
+import os
 
+def extract_data_to_numpy(file_path):
+    """
+    Extracts data from a text file and stores it in a NumPy array.
+
+    Parameters:
+    - file_path (str): The path to the text file.
+
+    Returns:
+    numpy.ndarray: A NumPy array containing the extracted data.
+    """
+    # Use numpy.loadtxt to read the data from the text file
+    data_array = np.loadtxt(file_path)
+
+    return data_array
+
+def extract_zip(zip_file_path, extract_folder):
+    """
+    Extracts the contents of a zip file into a specified folder.
+
+    Parameters:
+    - zip_file_path (str): The path to the zip file to be extracted.
+    - extract_folder (str): The path to the folder where the contents of the zip file will be extracted.
+
+    Returns:
+    None
+
+    Creates the specified extraction folder if it doesn't exist and extracts all contents of the zip file
+    into that folder.
+    """
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+        # Create the target extraction folder if it doesn't exist
+        os.makedirs(extract_folder, exist_ok=True)
+
+        # Extract all contents of the zip file into the specified folder
+        zip_ref.extractall(extract_folder)
+
+        print(f"Zip file '{zip_file_path}' successfully extracted to '{extract_folder}'.")
+
+
+        
 def add_noise(data, variance):
     """
     Add Gaussian noise to the input data.

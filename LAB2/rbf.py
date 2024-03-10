@@ -118,7 +118,7 @@ class RBFNetwork():
         plt.legend()
 
         plt.subplot(1, 2, 2)
-        plt.plot(self.centers, self.weights, marker='o')
+        plt.scatter(self.centers, self.weights, marker='o')
         plt.title(f'Weights for {title} Approximation')
 
         plt.show()
