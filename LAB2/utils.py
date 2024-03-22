@@ -121,6 +121,22 @@ def competitive_learning(data, num_rbf_units, learning_rate_cl, epochs_cl, num_w
 
 
 def load_binary_sequence_to_matrix(file, rows=32, cols=84):
+    """
+    Loads a binary sequence from a file and converts it into a 2D NumPy array.
+
+    This function reads a binary sequence stored in a specified file, where the binary values are separated by commas and potentially spread across multiple lines. It then converts this sequence into a 2D NumPy array of specified dimensions.
+
+    Parameters:
+        file (str): The path to the file containing the binary sequence.
+        rows (int, optional): The number of rows for the output 2D array. Defaults to 32.
+        cols (int, optional): The number of columns for the output 2D array. Defaults to 84.
+
+    Returns:
+        np.ndarray: A 2D NumPy array of shape (rows, cols) containing the binary sequence.
+
+    Raises:
+        ValueError: If the total number of binary values in the file does not match the product of `rows` and `cols`.
+    """
     with open(file, 'r') as file:
         sequence = file.read().replace('\n', '')  # Remove newlines if present
     # Convert the string to a list of integers
