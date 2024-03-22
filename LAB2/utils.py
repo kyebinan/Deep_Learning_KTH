@@ -120,6 +120,22 @@ def competitive_learning(data, num_rbf_units, learning_rate_cl, epochs_cl, num_w
     return rbf_nodes
 
 
+def load_binary_sequence_to_matrix(file, rows=32, cols=84):
+    with open(file, 'r') as file:
+        sequence = file.read().replace('\n', '')  # Remove newlines if present
+    # Convert the string to a list of integers
+    binary_list = [int(bit) for bit in sequence.split(',')]
+    
+    # Convert the list to a numpy array and reshape into the desired matrix
+    binary_matrix = np.array(binary_list).reshape(rows, cols)
+    
+    return binary_matrix
+
+
+
+
+
+
 
 
 
